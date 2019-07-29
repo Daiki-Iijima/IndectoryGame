@@ -18,14 +18,14 @@ public class ObjectManager : MonoBehaviour
     private GameObject scrollContaint;
 
     public List<GameObject> gameObjects;
-    
+
     // Start is called before the first frame update
     void Start()
     {
         createBtn.onClick.AddListener(() =>
         {
-            gameObjects.Add(Instantiate(createPrefab));
-            GameObject obj= Instantiate(infoPrefab);
+            gameObjects.Add(Instantiate(createPrefab, RandomVector3(0, 10f), Quaternion.identity));
+            GameObject obj = Instantiate(infoPrefab);
 
             var data = new CreateObjectAttribute
             {
@@ -34,10 +34,15 @@ public class ObjectManager : MonoBehaviour
             };
 
             obj.GetComponent<ScrollViewContent>().SetInfoData(data);
-            obj.transform.SetParent(scrollContaint.transform,false);
+            obj.transform.SetParent(scrollContaint.transform, false);
         });
     }
 
+
+    public Vector3 RandomVector3(float start, float end)
+    {
+        return new Vector3(Random.Range(start, end), Random.Range(start, end), Random.Range(start, end));
+    }
     // Update is called once per frame
     void Update()
     {
