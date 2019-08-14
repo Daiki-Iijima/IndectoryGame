@@ -12,21 +12,15 @@ public class ScrollViewContent : MonoBehaviour
     private Image image;
 
     public CreateObjectAttribute objInfo;
-    
+
     // Start is called before the first frame update
     void Start()
     {
         objInfo = new CreateObjectAttribute();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        nameText.text = $"{objInfo.Name}:{objInfo.ItemType.ToString()}";
-    }
-
     public void SetInfoData(CreateObjectAttribute setData)
     {
         objInfo = setData;
+        nameText.text = $"{objInfo.Name}:{objInfo.ItemType.ToString()}";
     }
 }

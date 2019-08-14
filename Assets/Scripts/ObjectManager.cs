@@ -12,6 +12,8 @@ public class ObjectManager : MonoBehaviour
     private GameObject infoPrefab;
 
     [SerializeField]
+    private GameObject placeField;
+    [SerializeField]
     private Button createBtn;
 
     [SerializeField]
@@ -21,11 +23,14 @@ public class ObjectManager : MonoBehaviour
     private GameObject picePrefab;
     public List<GameObject> gameObjects;
 
+    public int CreatedField { get; set; }
+
     // Start is called before the first frame update
     void Start()
     {
         createBtn.onClick.AddListener(() =>
         {
+            CreatedField++;
             gameObjects.Add(Instantiate(createPrefab, RandomVector3(0, 10f), Quaternion.identity));
             GameObject obj = Instantiate(infoPrefab);
 
@@ -44,12 +49,7 @@ public class ObjectManager : MonoBehaviour
         {
             for (int countY = -5; countY <= 5; countY++)
             {
-                var obj = Instantiate(picePrefab, new Vector3(countX, 0, countY), Quaternion.identity);
-
-                if (countX == 0)
-                {
-                    obj.GetComponent<PiceController>().Selected();
-                }
+                var obj = Instantiate(picePrefab, new Vector3(countX * placeField.transform.lossyScale.x, 0, countY * placeField.transform.lossyScale.z), Quaternion.identity, placeField.transform);
             }
         }
     }
@@ -62,6 +62,24 @@ public class ObjectManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        RaycastHit hitInfo = new RaycastHit();
+        if (Physics.Raycast(GetTouchRay(isEnableDrawRay: true), out hitInfo))
+        {
+            if (Input.GetMouseButtonDown(0))
+                hitInfo.collider.gameObject.GetComponent<PiceController>().Selected();
+        }
+
+
+    }
+
+    /// <summary>
+    /// スクリーン座標でタッチされた位置から飛ばしたRayを返す
+    /// </summary>
+    /// <param name="isEnableDrawRay">デバッグRayを表示するか</param>
+    /// <returns>スクリーン座標系に変換されたRay</returns>
+    public Ray GetTouchRay(bool isEnableDrawRay = false)
+    {
         Vector2 touchScreenPosition = Input.mousePosition;
 
         touchScreenPosition.x = Mathf.Clamp(touchScreenPosition.x, 0.0f, Screen.width);
@@ -70,15 +88,12 @@ public class ObjectManager : MonoBehaviour
         Camera gameCamera = Camera.main;
         Ray touchPointToRay = gameCamera.ScreenPointToRay(touchScreenPosition);
 
-        RaycastHit hitInfo = new RaycastHit();
-        if (Physics.Raycast(touchPointToRay, out hitInfo))
+        if (isEnableDrawRay)
         {
-            if (Input.GetMouseButton(0))
-                hitInfo.collider.gameObject.GetComponent<PiceController>().Selected();
+            // デバッグ用のRay表示
+            Debug.DrawRay(touchPointToRay.origin, touchPointToRay.direction * 1000.0f);
         }
 
-        // デバッグ機能を利用して、スクリーンビューでレイが出ているか見てみよう。
-        Debug.DrawRay(touchPointToRay.origin, touchPointToRay.direction * 1000.0f);
-
+        return touchPointToRay;
     }
 }
