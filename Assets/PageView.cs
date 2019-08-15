@@ -17,44 +17,59 @@ public class PageView : MonoBehaviour
     private GameObject content;
 
     [SerializeField]
-    private Button pageViewContentPrefab;
+    private GameObject pageViewContentPrefab;
 
     /// <summary>
     /// １ページあたりの要素数
     /// </summary>
     /// <value></value>
-    public int PageContentNum { get; set; }
+    public int PageContentNum { get; set; } = 3;
 
-    public List<ViewContent> ContentList { get; set; }
+    public List<ItemAttribute> ContentList { get; set; }
 
     private List<Button> CreateButtonList = new List<Button>();
     public int PageCount { get; set; }
-
+    public int NowPageCount { get; set; }
 
     // Start is called before the first frame update
     void Start()
     {
-        ContentList = new List<ViewContent>()
+        ContentList = new List<ItemAttribute>()
         {
-            new ViewContent(),
-            new ViewContent(),
-            new ViewContent(),
+            new ItemAttribute{
+                 Name = "これはテストデータ",
+                 ItemType = ItemTypeAttribute.Type.Food
+            },
+            new ItemAttribute{
+                 Name = "ddd",
+                 ItemType = ItemTypeAttribute.Type.Gear
+            },
+            new ItemAttribute{
+                 Name = "あなたはホモ",
+                 ItemType = ItemTypeAttribute.Type.Wepon
+            },
+            new ItemAttribute{
+                 Name = "レズビアン",
+                 ItemType = ItemTypeAttribute.Type.Wepon
+            },
+            new ItemAttribute{
+                 Name = "aaa",
+                 ItemType = ItemTypeAttribute.Type.Wepon
+            },
+            new ItemAttribute{
+                 Name = "ccc",
+                 ItemType = ItemTypeAttribute.Type.Wepon
+            },
         };
-        PageContentNum = 3;
 
         var list = CreateViewButton(PageContentNum);
 
         int count = 0;
         foreach (var item in list)
         {
-            var data = new ItemAttribute
-            {
-                Name = count.ToString(),
-                ItemType = ItemTypeAttribute.Type.Food
-            };
+            item.ItemInfo = ContentList[count];
+            item.OnPress += OnPressEvent;
 
-            item.transform.GetComponent<ViewContent>().SetInfoData(data);
-            item.transform.GetComponent<ViewContent>().OnPress += OnPressEvent;
             count++;
         }
 
@@ -65,13 +80,29 @@ public class PageView : MonoBehaviour
             {
                 PageCount++;
             }
+
         }
+
 
         Debug.Log($"ページ数{PageCount}");
 
         nextBtn.onClick.AddListener(() =>
         {
+            NowPageCount++;
+            //  内容の初期化
+            foreach (var item in list)
+            {
+                item.Clean();
+            }
 
+            int counter = 1 * NowPageCount;
+            foreach (var item in list)
+            {
+                item.ItemInfo = ContentList[counter];
+                item.OnPress += OnPressEvent;
+
+                counter++;
+            }
         });
     }
 
@@ -80,28 +111,30 @@ public class PageView : MonoBehaviour
         Debug.Log("クリック");
     }
 
-    //  todo : ボタンである必要性はない？
-    private List<Button> CreateViewButton(int count)
+    //  todo : ボタンである必要性はない？GameObjectである意味もない？
+    private List<ViewContent> CreateViewButton(int count)
     {
-        List<Button> viewButtons = new List<Button>();
+        List<ViewContent> viewContents = new List<ViewContent>();
 
         for (int i = 0; i < count; i++)
         {
             //  ボタンの配置
-            var rect = Instantiate(pageViewContentPrefab, content.transform).gameObject.GetComponent<RectTransform>();
+            var obj = Instantiate(pageViewContentPrefab, content.transform);
+            var rect = obj.GetComponent<RectTransform>();
+            var viewCont = obj.GetComponent<ViewContent>();
 
             rect.gameObject.name = i.ToString();
 
-            //  位置調整S
+            //  位置調整
             rect.localPosition = new Vector3(
                 content.GetComponent<RectTransform>().sizeDelta.x / count * i,
                 0,
                 0
                 );
 
-            viewButtons.Add(rect.gameObject.GetComponent<Button>());
+            viewContents.Add(viewCont);
         }
 
-        return viewButtons;
+        return viewContents;
     }
 }

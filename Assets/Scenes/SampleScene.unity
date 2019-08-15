@@ -775,7 +775,7 @@ MonoBehaviour:
   nextBtn: {fileID: 1409311949}
   backBtn: {fileID: 4267137}
   content: {fileID: 2132013993}
-  pageViewContentPrefab: {fileID: 5609020086701329878, guid: 4dc95f055cdca470381b74bd6fdc8ddf,
+  pageViewContentPrefab: {fileID: 5609020086701329872, guid: 4dc95f055cdca470381b74bd6fdc8ddf,
     type: 3}
 --- !u!1 &170076733
 GameObject:

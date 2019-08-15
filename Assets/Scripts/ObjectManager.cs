@@ -40,7 +40,7 @@ public class ObjectManager : MonoBehaviour
                 ItemType = ItemTypeAttribute.Type.Food
             };
 
-            obj.GetComponent<ViewContent>().SetInfoData(data);
+            obj.GetComponent<ViewContent>().ItemInfo = data;
             obj.transform.SetParent(scrollContaint.transform, false);
         });
 

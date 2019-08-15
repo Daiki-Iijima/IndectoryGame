@@ -6,31 +6,46 @@ using UnityEngine.UI;
 public class ViewContent : MonoBehaviour
 {
     [SerializeField]
-    private Text nameText;
+    private Text displayText;
 
     [SerializeField]
     private Image image;
-
     [SerializeField]
     private Button button;
 
+    #region  イベント
     public delegate void onPress(string a);
     public event onPress OnPress;
-    public ItemAttribute objInfo;
+    #endregion
+
+    private ItemAttribute itemInfo;
+    public ItemAttribute ItemInfo
+    {
+        set
+        {
+            itemInfo = value;
+            if (itemInfo != null)
+                displayText.text = $"{ItemInfo.Name}:{ItemInfo.ItemType.ToString()}";
+        }
+        get
+        {
+            return itemInfo;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        objInfo = new ItemAttribute();
-
         button.onClick.AddListener(() =>
         {
             OnPress?.Invoke("きた");
         });
     }
-    public void SetInfoData(ItemAttribute setData)
+
+    public void Clean()
     {
-        objInfo = setData;
-        nameText.text = $"{objInfo.Name}:{objInfo.ItemType.ToString()}";
+        ItemInfo = null;
+        displayText.text = "";
     }
+
 }
