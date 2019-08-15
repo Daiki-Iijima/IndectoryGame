@@ -1,6 +1,6 @@
-﻿public class ObjectTypeAttribute
+﻿public class ItemTypeAttribute
 {
-   public enum Type
+    public enum Type
     {
         Wepon,
         Food,

@@ -772,6 +772,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1873380b49e5f43748e1eb81e4e99cec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nextBtn: {fileID: 1409311949}
+  backBtn: {fileID: 4267137}
   content: {fileID: 2132013993}
   pageViewContentPrefab: {fileID: 5609020086701329878, guid: 4dc95f055cdca470381b74bd6fdc8ddf,
     type: 3}

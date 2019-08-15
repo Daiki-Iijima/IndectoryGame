@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public class PageView : MonoBehaviour
 {
-#if UIボタン関係
+    #region  UIボタン関係
     [SerializeField]
     private Button nextBtn;
 
     [SerializeField]
     private Button backBtn;
-#endif
+    #endregion
 
     [SerializeField]
     private GameObject content;
@@ -26,40 +25,38 @@ public class PageView : MonoBehaviour
     /// <value></value>
     public int PageContentNum { get; set; }
 
-    public List<int> ContentList { get; set; }
+    public List<ViewContent> ContentList { get; set; }
 
+    private List<Button> CreateButtonList = new List<Button>();
     public int PageCount { get; set; }
 
 
     // Start is called before the first frame update
     void Start()
     {
-        ContentList = new List<int>()
+        ContentList = new List<ViewContent>()
         {
-            1,
-            5,
-            3,
-            99,
-            6,
+            new ViewContent(),
+            new ViewContent(),
+            new ViewContent(),
         };
         PageContentNum = 3;
 
-        for (int add = 0; add < PageContentNum; add++)
+        var list = CreateViewButton(PageContentNum);
+
+        int count = 0;
+        foreach (var item in list)
         {
-            //  ボタンの配置
-            //  todo : メソッド化して使えるはず
-            var rect = Instantiate(pageViewContentPrefab, content.transform).gameObject.GetComponent<RectTransform>();
-            rect.gameObject.name = add.ToString();
-            rect.localPosition = new Vector3(
-                content.GetComponent<RectTransform>().sizeDelta.x / PageContentNum * add,
-                0,
-                0
-                );
+            var data = new ItemAttribute
+            {
+                Name = count.ToString(),
+                ItemType = ItemTypeAttribute.Type.Food
+            };
 
-            //  最初に表示する情報を設定
-            rect.transform.Find("Text").GetComponent<Text>().text = (ContentList[add].ToString());
+            item.transform.GetComponent<ViewContent>().SetInfoData(data);
+            item.transform.GetComponent<ViewContent>().OnPress += OnPressEvent;
+            count++;
         }
-
 
 
         for (int i = 0; i < ContentList.Count; i++)
@@ -71,11 +68,40 @@ public class PageView : MonoBehaviour
         }
 
         Debug.Log($"ページ数{PageCount}");
+
+        nextBtn.onClick.AddListener(() =>
+        {
+
+        });
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnPressEvent(string st)
     {
+        Debug.Log("クリック");
+    }
 
+    //  todo : ボタンである必要性はない？
+    private List<Button> CreateViewButton(int count)
+    {
+        List<Button> viewButtons = new List<Button>();
+
+        for (int i = 0; i < count; i++)
+        {
+            //  ボタンの配置
+            var rect = Instantiate(pageViewContentPrefab, content.transform).gameObject.GetComponent<RectTransform>();
+
+            rect.gameObject.name = i.ToString();
+
+            //  位置調整S
+            rect.localPosition = new Vector3(
+                content.GetComponent<RectTransform>().sizeDelta.x / count * i,
+                0,
+                0
+                );
+
+            viewButtons.Add(rect.gameObject.GetComponent<Button>());
+        }
+
+        return viewButtons;
     }
 }

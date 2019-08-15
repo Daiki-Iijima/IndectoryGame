@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScrollViewContent : MonoBehaviour
+public class ViewContent : MonoBehaviour
 {
     [SerializeField]
     private Text nameText;
@@ -11,14 +11,24 @@ public class ScrollViewContent : MonoBehaviour
     [SerializeField]
     private Image image;
 
-    public CreateObjectAttribute objInfo;
+    [SerializeField]
+    private Button button;
+
+    public delegate void onPress(string a);
+    public event onPress OnPress;
+    public ItemAttribute objInfo;
 
     // Start is called before the first frame update
     void Start()
     {
-        objInfo = new CreateObjectAttribute();
+        objInfo = new ItemAttribute();
+
+        button.onClick.AddListener(() =>
+        {
+            OnPress?.Invoke("きた");
+        });
     }
-    public void SetInfoData(CreateObjectAttribute setData)
+    public void SetInfoData(ItemAttribute setData)
     {
         objInfo = setData;
         nameText.text = $"{objInfo.Name}:{objInfo.ItemType.ToString()}";

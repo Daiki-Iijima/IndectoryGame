@@ -34,13 +34,13 @@ public class ObjectManager : MonoBehaviour
             gameObjects.Add(Instantiate(createPrefab, RandomVector3(0, 10f), Quaternion.identity));
             GameObject obj = Instantiate(infoPrefab);
 
-            var data = new CreateObjectAttribute
+            var data = new ItemAttribute
             {
                 Name = "",
-                ItemType = ObjectTypeAttribute.Type.Gear
+                ItemType = ItemTypeAttribute.Type.Food
             };
 
-            obj.GetComponent<ScrollViewContent>().SetInfoData(data);
+            obj.GetComponent<ViewContent>().SetInfoData(data);
             obj.transform.SetParent(scrollContaint.transform, false);
         });
 
