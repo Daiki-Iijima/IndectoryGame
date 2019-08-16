@@ -37,7 +37,7 @@ public class PageView : MonoBehaviour
         ContentList = new List<ItemAttribute>()
         {
             new ItemAttribute{
-                 Name = "これはテストデータ",
+                 Name = "aaa",
                  ItemType = ItemTypeAttribute.Type.Food
             },
             new ItemAttribute{
@@ -45,19 +45,19 @@ public class PageView : MonoBehaviour
                  ItemType = ItemTypeAttribute.Type.Gear
             },
             new ItemAttribute{
-                 Name = "あなたはホモ",
-                 ItemType = ItemTypeAttribute.Type.Wepon
-            },
-            new ItemAttribute{
-                 Name = "レズビアン",
-                 ItemType = ItemTypeAttribute.Type.Wepon
-            },
-            new ItemAttribute{
-                 Name = "aaa",
-                 ItemType = ItemTypeAttribute.Type.Wepon
-            },
-            new ItemAttribute{
                  Name = "ccc",
+                 ItemType = ItemTypeAttribute.Type.Wepon
+            },
+            new ItemAttribute{
+                 Name = "ddd",
+                 ItemType = ItemTypeAttribute.Type.Wepon
+            },
+            new ItemAttribute{
+                 Name = "eee",
+                 ItemType = ItemTypeAttribute.Type.Wepon
+            },
+            new ItemAttribute{
+                 Name = "fff",
                  ItemType = ItemTypeAttribute.Type.Wepon
             },
         };
@@ -80,38 +80,57 @@ public class PageView : MonoBehaviour
             {
                 PageCount++;
             }
-
         }
 
-
-        Debug.Log($"ページ数{PageCount}");
-
-        nextBtn.onClick.AddListener(() =>
-        {
-            NowPageCount++;
-            //  内容の初期化
-            foreach (var item in list)
-            {
-                item.Clean();
-            }
-
-            int counter = 1 * NowPageCount;
-            foreach (var item in list)
-            {
-                item.ItemInfo = ContentList[counter];
-                item.OnPress += OnPressEvent;
-
-                counter++;
-            }
-        });
+        #region ボタンイベント設定
+        nextBtn.onClick.AddListener(() => ChangePage(list, 1, isNext: true));
+        backBtn.onClick.AddListener(() => ChangePage(list, 1, isNext: false));
+        #endregion
     }
 
-    private void OnPressEvent(string st)
+    private void OnPressEvent(ItemAttribute item)
     {
-        Debug.Log("クリック");
+        Debug.Log("クリック : " + item.Name);
     }
 
-    //  todo : ボタンである必要性はない？GameObjectである意味もない？
+    /// <summary>
+    /// ページ切り替え
+    /// </summary>
+    /// <param name="contentList"></param>
+    /// <param name="skipPageCount"></param>
+    /// <param name="isNext"></param>
+    private void ChangePage(List<ViewContent> contentList, int skipPageCount, bool isNext)
+    {
+        // //  todo : ここで処理ブロック入れてはいけない気がする
+        // //  みるのは、counter?
+        // if (contentList.Count < NowPageCount ||
+        //     0 > NowPageCount)
+        // { return; }
+
+        if (isNext) NowPageCount++; else NowPageCount--;
+
+        int counter = skipPageCount * NowPageCount;
+
+        //  内容の初期化
+        foreach (var item in contentList)
+        {
+            item.Clean();
+        }
+
+        foreach (var item in contentList)
+        {
+            item.ItemInfo = ContentList[counter];
+            item.OnPress += OnPressEvent;
+
+            counter++;
+        }
+    }
+
+    /// <summary>
+    /// ボタンを作成し、ViewのContent下に生成する
+    /// </summary>
+    /// <param name="count">生成するボタン数</param>
+    /// <returns>生成したボタン(ViewContent)のリスト</returns>
     private List<ViewContent> CreateViewButton(int count)
     {
         List<ViewContent> viewContents = new List<ViewContent>();

@@ -14,7 +14,7 @@ public class ViewContent : MonoBehaviour
     private Button button;
 
     #region  イベント
-    public delegate void onPress(string a);
+    public delegate void onPress(ItemAttribute info);
     public event onPress OnPress;
     #endregion
 
@@ -38,7 +38,7 @@ public class ViewContent : MonoBehaviour
     {
         button.onClick.AddListener(() =>
         {
-            OnPress?.Invoke("きた");
+            OnPress?.Invoke(ItemInfo);
         });
     }
 
