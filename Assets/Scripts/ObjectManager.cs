@@ -45,13 +45,13 @@ public class ObjectManager : MonoBehaviour
         });
 
         //  フィールドの生成
-        for (int countX = -5; countX <= 5; countX++)
-        {
-            for (int countY = -5; countY <= 5; countY++)
-            {
-                var obj = Instantiate(picePrefab, new Vector3(countX * placeField.transform.lossyScale.x, 0, countY * placeField.transform.lossyScale.z), Quaternion.identity, placeField.transform);
-            }
-        }
+        // for (int countX = -5; countX <= 5; countX++)
+        // {
+        //     for (int countY = -5; countY <= 5; countY++)
+        //     {
+        //         var obj = Instantiate(picePrefab, new Vector3(countX * placeField.transform.lossyScale.x, 0, countY * placeField.transform.lossyScale.z), Quaternion.identity, placeField.transform);
+        //     }
+        // }
     }
 
 

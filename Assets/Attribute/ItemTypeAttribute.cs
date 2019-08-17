@@ -2,8 +2,8 @@
 {
     public enum Type
     {
-        Wepon,
-        Food,
-        Gear,
+        Wepon,// 白
+        Food,// 緑
+        Gear,// 青
     }
 }

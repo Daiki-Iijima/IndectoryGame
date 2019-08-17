@@ -83,8 +83,8 @@ public class PageView : MonoBehaviour
         }
 
         #region ボタンイベント設定
-        nextBtn.onClick.AddListener(() => ChangePage(list, 1, isNext: true));
-        backBtn.onClick.AddListener(() => ChangePage(list, 1, isNext: false));
+        nextBtn.onClick.AddListener(() => ChangePage(list, 3, isNext: true));
+        backBtn.onClick.AddListener(() => ChangePage(list, 3, isNext: false));
         #endregion
     }
 
@@ -101,11 +101,10 @@ public class PageView : MonoBehaviour
     /// <param name="isNext"></param>
     private void ChangePage(List<ViewContent> contentList, int skipPageCount, bool isNext)
     {
-        // //  todo : ここで処理ブロック入れてはいけない気がする
-        // //  みるのは、counter?
-        // if (contentList.Count < NowPageCount ||
-        //     0 > NowPageCount)
-        // { return; }
+        //  todo : ここで処理ブロック入れてはいけない気がする
+        //  みるのは、counter?
+        if (PageCount < skipPageCount * NowPageCount)
+        { return; }
 
         if (isNext) NowPageCount++; else NowPageCount--;
 
