@@ -23,6 +23,20 @@ public class ObjectManager : MonoBehaviour
     private GameObject picePrefab;
     public List<GameObject> gameObjects;
 
+    #region モードボタン
+    private FieldAttribute.Type FieldType = FieldAttribute.Type.Farmland;
+
+    [SerializeField]
+    private Button farmalandButton;
+    [SerializeField]
+    private Button plowed_FarmalandButton;
+    [SerializeField]
+    private Button wastelandButton;
+    [SerializeField]
+    private Button RoadButton;
+
+    #endregion
+
     public int CreatedField { get; set; }
 
     // Start is called before the first frame update
@@ -52,6 +66,12 @@ public class ObjectManager : MonoBehaviour
         //         var obj = Instantiate(picePrefab, new Vector3(countX * placeField.transform.lossyScale.x, 0, countY * placeField.transform.lossyScale.z), Quaternion.identity, placeField.transform);
         //     }
         // }
+
+        farmalandButton.onClick.AddListener(() => FieldType = FieldAttribute.Type.Farmland);
+        plowed_FarmalandButton.onClick.AddListener(() => FieldType = FieldAttribute.Type.Plowed_farmland);
+        wastelandButton.onClick.AddListener(() => FieldType = FieldAttribute.Type.Wasteland);
+        RoadButton.onClick.AddListener(() => FieldType = FieldAttribute.Type.Road);
+
     }
 
 
@@ -67,7 +87,7 @@ public class ObjectManager : MonoBehaviour
         if (Physics.Raycast(GetTouchRay(isEnableDrawRay: true), out hitInfo))
         {
             if (Input.GetMouseButtonDown(0))
-                hitInfo.collider.gameObject.GetComponent<PiceController>().Selected();
+                hitInfo.collider.gameObject.GetComponent<PiceController>().Selected(FieldType);
         }
 
 
