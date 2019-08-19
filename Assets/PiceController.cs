@@ -9,6 +9,9 @@ public class PiceController : MonoBehaviour
     [SerializeField]
     private Slider timeSlider;
 
+    private bool isStartChange;
+
+    public FieldAttribute.Type FieldType { get; set; }
     private void Start()
     {
         //  最初は非表示に
@@ -16,6 +19,10 @@ public class PiceController : MonoBehaviour
     }
     public void Selected(FieldAttribute.Type type)
     {
+        isStartChange = true;
+        FieldType = type;
+        timeSlider.gameObject.SetActive(isStartChange);
+
         var defoMaterial = this.gameObject.GetComponent<MeshRenderer>().material;
         var shader = defoMaterial.shader;
         var newMaterial = new Material(shader);
@@ -25,6 +32,20 @@ public class PiceController : MonoBehaviour
         // newMaterial.SetInt("_SmoothnessTextureChannel", 1);
 
         this.gameObject.GetComponent<MeshRenderer>().material = newMaterial;
+    }
+    private void Update()
+    {
+        if (timeSlider.value <= 1 && isStartChange)
+        {
+            timeSlider.value += 0.017f;
 
+        }
+
+        if (timeSlider.value >= 1)
+        {
+            timeSlider.value = 0;
+            isStartChange = false;
+            timeSlider.gameObject.SetActive(isStartChange);
+        }
     }
 }

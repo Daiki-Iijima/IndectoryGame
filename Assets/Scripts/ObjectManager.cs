@@ -87,7 +87,20 @@ public class ObjectManager : MonoBehaviour
         if (Physics.Raycast(GetTouchRay(isEnableDrawRay: true), out hitInfo))
         {
             if (Input.GetMouseButtonDown(0))
-                hitInfo.collider.gameObject.GetComponent<PiceController>().Selected(FieldType);
+            {
+                var piceController = hitInfo.collider.gameObject.GetComponent<PiceController>();
+                switch (piceController.FieldType)
+                {
+                    case FieldAttribute.Type.Farmland:
+                        piceController.Selected(FieldType);
+                        break;
+                    case FieldAttribute.Type.Plowed_farmland:
+
+                        break;
+                }
+
+
+            }
         }
 
 
