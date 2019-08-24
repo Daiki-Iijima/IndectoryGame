@@ -37,9 +37,10 @@ public class ObjectManager : MonoBehaviour
 
     #endregion
 
-
     public int CreateCountX;
     public int CreateCountY;
+
+    public float ScrollSpeed;
     public int CreatedField { get; set; }
 
     // Start is called before the first frame update
@@ -77,7 +78,6 @@ public class ObjectManager : MonoBehaviour
 
     }
 
-
     public Vector3 RandomVector3(float start, float end)
     {
         return new Vector3(Random.Range(start, end), Random.Range(start, end), Random.Range(start, end));
@@ -99,9 +99,11 @@ public class ObjectManager : MonoBehaviour
                 {
                     case FieldAttribute.Type.Farmland:
                         Debug.Log("農地");
+
                         break;
                     case FieldAttribute.Type.Plowed_farmland:
                         Debug.Log("耕した土地");
+                        piceController.ChangeEnableImage();
                         break;
                     case FieldAttribute.Type.Road:
                         Debug.Log("道");
@@ -110,8 +112,6 @@ public class ObjectManager : MonoBehaviour
                         Debug.Log("荒地");
                         break;
                 }
-
-
             }
 
             if (Input.GetMouseButton(1))
@@ -120,27 +120,25 @@ public class ObjectManager : MonoBehaviour
                 var pos = placeField.transform.position;
                 if (Input.mousePosition.x < 300)
                 {
-                    pos = new Vector3(pos.x + 0.4f, pos.y, pos.z);
+                    pos = new Vector3(pos.x + ScrollSpeed, pos.y, pos.z);
                 }
                 else
                 {
-                    pos = new Vector3(pos.x - 0.4f, pos.y, pos.z);
+                    pos = new Vector3(pos.x - ScrollSpeed, pos.y, pos.z);
                 }
 
                 if (Input.mousePosition.y < 150)
                 {
-                    pos = new Vector3(pos.x, pos.y, pos.z + 0.4f);
+                    pos = new Vector3(pos.x, pos.y, pos.z + ScrollSpeed);
                 }
                 else
                 {
-                    pos = new Vector3(pos.x, pos.y, pos.z - 0.4f);
+                    pos = new Vector3(pos.x, pos.y, pos.z - ScrollSpeed);
                 }
 
                 placeField.transform.position = pos;
             }
         }
-
-
     }
 
     /// <summary>
