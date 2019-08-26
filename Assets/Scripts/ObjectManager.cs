@@ -16,6 +16,8 @@ public class ObjectManager : MonoBehaviour
     [SerializeField]
     private Text MoneyText;
 
+    [SerializeField]
+    private GameObject shopPanel;
     #region ボタン
 
     [SerializeField]
@@ -52,6 +54,8 @@ public class ObjectManager : MonoBehaviour
 
         sellButton.onClick.AddListener(() =>
         {
+            if (!shopPanel.activeSelf) { shopPanel.SetActive(true); return; }
+
             if (GetItemCount == 0)
             {
                 Debug.Log("売るアイテムがないよ");
@@ -91,6 +95,17 @@ public class ObjectManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 var piceController = hitInfo.collider.gameObject.GetComponent<PiceController>();
+
+
+                //  TODO : Canvas状のUIの当たり判定の取り方を検討
+                //Debug.Log(hitInfo.transform.gameObject.layer);
+
+                ////  UIとの当たり判定を先に計算
+                ////  UIが存在していた場合、ブロックのクリックへ判定がいかないように
+                //if(hitInfo.collider.gameObject.layer ==5)
+                //{
+                //    return;
+                //}
 
                 //  作物の回収を優先
                 if (piceController.FieldType == FieldAttribute.Type.Planted)
