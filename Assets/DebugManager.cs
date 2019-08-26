@@ -10,12 +10,18 @@ public class DebugManager : MonoBehaviour
     [SerializeField]
     private GameObject field;
 
+    [SerializeField]
+    private ObjectManager manager;
+
     private List<PiceController> pices = new List<PiceController>();
 
     private int farmlandCount = 0;
     private int Plowed_FarmlandCount = 0;
+    private int plantCount = 0;
     private int RoadCount = 0;
     private int WastelandCount = 0;
+    private int SeedCount = 0;
+    private int WheatCount = 0;
 
 
     // Start is called before the first frame update
@@ -39,6 +45,9 @@ public class DebugManager : MonoBehaviour
         Plowed_FarmlandCount = 0;
         RoadCount = 0;
         WastelandCount = 0;
+        SeedCount = 0;
+        WheatCount = 0;
+        plantCount = 0;
 
         foreach (var item in pices)
         {
@@ -54,6 +63,11 @@ public class DebugManager : MonoBehaviour
                         Plowed_FarmlandCount++;
                     }
                     break;
+                case FieldAttribute.Type.Planted:
+                    {
+                        plantCount++;
+                    }
+                    break;
                 case FieldAttribute.Type.Road:
                     {
                         RoadCount++;
@@ -66,12 +80,36 @@ public class DebugManager : MonoBehaviour
                     break;
 
             }
+
+            switch (item.PlantType)
+            {
+                case PlantTypeAttribute.PlantType.Seed:
+                    {
+                        SeedCount++;
+                    }
+                    break;
+                case PlantTypeAttribute.PlantType.Wheat:
+                    {
+                        WheatCount++;
+                    }
+                    break;
+
+            }
         }
+
 
         outputText.text = $@"[==DebugText==]
 農地   : {farmlandCount}
 耕農地  : { Plowed_FarmlandCount}
+タネ土地  : { plantCount}
 道     : { RoadCount}
-荒地   : { WastelandCount}";
+荒地   : { WastelandCount}
+==============
+タネ : { SeedCount}
+小麦 : { WheatCount}
+==============
+所持小麦 : {manager.GetItemCount}
+所持金 : {manager.Money}
+";
     }
 }

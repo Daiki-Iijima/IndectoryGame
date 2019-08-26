@@ -15,8 +15,13 @@ public class PiceController : MonoBehaviour
 
     public FieldAttribute.Type FieldType { get; private set; }
 
+    public PlantTypeAttribute.PlantType PlantType { get; private set; }
+
+
     private void Start()
     {
+        FieldType = FieldAttribute.Type.Wasteland;
+        PlantType = PlantTypeAttribute.PlantType.None;
         //  最初は非表示に
         timeSlider.gameObject.SetActive(false);
         image.enabled = false;
@@ -37,15 +42,20 @@ public class PiceController : MonoBehaviour
         this.gameObject.GetComponent<MeshRenderer>().material = newMaterial;
     }
 
-    public void ChangeEnableImage()
+    public void PlantSeed()
     {
-        image.enabled = !image.enabled;
+        if (PlantType != PlantTypeAttribute.PlantType.None) { return; }
+
+        FieldType = FieldAttribute.Type.Planted;
+        image.enabled = true;
         StartCoroutine("SeedTimer");
     }
 
     private IEnumerator SeedTimer()
     {
+
         image.sprite = Resources.Load<Sprite>("Images/Plants/SeedImg");
+        PlantType = PlantTypeAttribute.PlantType.Seed;
         // ログ出力  
         Debug.Log("植えられました");
 
@@ -53,7 +63,26 @@ public class PiceController : MonoBehaviour
         yield return new WaitForSeconds(10.0f);
 
         image.sprite = Resources.Load<Sprite>("Images/Plants/komugiImg");
+        PlantType = PlantTypeAttribute.PlantType.Wheat;
+
         Debug.Log("育ちました");
+    }
+
+
+    public int Harvest()
+    {
+        if (PlantType == PlantTypeAttribute.PlantType.None ||
+            PlantType == PlantTypeAttribute.PlantType.Seed)
+        {
+            return 0;
+        }
+
+        PlantType = PlantTypeAttribute.PlantType.None;
+        FieldType = FieldAttribute.Type.Farmland;
+
+        image.enabled = false;
+        var count = Random.Range(1, 3);
+        return count;
     }
 
     private void Update()

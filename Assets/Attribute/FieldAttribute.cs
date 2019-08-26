@@ -6,6 +6,7 @@ public class FieldAttribute
     {
         Farmland,               //  農地
         Plowed_farmland,        //  耕された農地
+        Planted,                //  植えられている
         Wasteland,              //  荒地
         Road,                   // 道
     }

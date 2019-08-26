@@ -6,24 +6,21 @@ using UnityEngine.UI;
 public class ObjectManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject createPrefab;
-
-    [SerializeField]
-    private GameObject infoPrefab;
-
-    [SerializeField]
     private GameObject placeField;
     [SerializeField]
     private Button createBtn;
 
     [SerializeField]
-    private GameObject scrollContaint;
+    private GameObject picePrefab;
 
     [SerializeField]
-    private GameObject picePrefab;
-    public List<GameObject> gameObjects;
+    private Text MoneyText;
 
-    #region モードボタン
+    #region ボタン
+
+    [SerializeField]
+    private Button sellButton;
+
     private FieldAttribute.Type FieldType = FieldAttribute.Type.Farmland;
 
     [SerializeField]
@@ -41,25 +38,27 @@ public class ObjectManager : MonoBehaviour
     public int CreateCountY;
 
     public float ScrollSpeed;
-    public int CreatedField { get; set; }
+    public int GetItemCount = 0;
+
+    public int Money = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         createBtn.onClick.AddListener(() =>
         {
-            CreatedField++;
-            gameObjects.Add(Instantiate(createPrefab, RandomVector3(0, 10f), Quaternion.identity));
-            GameObject obj = Instantiate(infoPrefab);
 
-            var data = new ItemAttribute
+        });
+
+        sellButton.onClick.AddListener(() =>
+        {
+            if (GetItemCount == 0)
             {
-                Name = "",
-                ItemType = ItemTypeAttribute.Type.Food
-            };
-
-            obj.GetComponent<ViewContent>().ItemInfo = data;
-            obj.transform.SetParent(scrollContaint.transform, false);
+                Debug.Log("売るアイテムがないよ");
+                return;
+            }
+            Money += GetItemCount * 8;
+            GetItemCount = 0;
         });
 
         //  フィールドの生成
@@ -85,7 +84,7 @@ public class ObjectManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        MoneyText.text = "$ : " + Money.ToString();
         RaycastHit hitInfo = new RaycastHit();
         if (Physics.Raycast(GetTouchRay(isEnableDrawRay: true), out hitInfo))
         {
@@ -93,17 +92,23 @@ public class ObjectManager : MonoBehaviour
             {
                 var piceController = hitInfo.collider.gameObject.GetComponent<PiceController>();
 
+                //  作物の回収を優先
+                if (piceController.FieldType == FieldAttribute.Type.Planted)
+                {
+                    GetItemCount += piceController.Harvest();
+                    return;
+                }
+
                 piceController.Selected(FieldType);
 
                 switch (piceController.FieldType)
                 {
                     case FieldAttribute.Type.Farmland:
                         Debug.Log("農地");
-
                         break;
                     case FieldAttribute.Type.Plowed_farmland:
                         Debug.Log("耕した土地");
-                        piceController.ChangeEnableImage();
+                        piceController.PlantSeed();
                         break;
                     case FieldAttribute.Type.Road:
                         Debug.Log("道");
