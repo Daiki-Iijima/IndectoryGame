@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ObjectManager : MonoBehaviour
@@ -21,7 +22,7 @@ public class ObjectManager : MonoBehaviour
     #region ボタン
 
     [SerializeField]
-    private Button sellButton;
+    private Button shopButton;
 
     private FieldAttribute.Type FieldType = FieldAttribute.Type.Farmland;
 
@@ -52,17 +53,9 @@ public class ObjectManager : MonoBehaviour
 
         });
 
-        sellButton.onClick.AddListener(() =>
+        shopButton.onClick.AddListener(() =>
         {
             if (!shopPanel.activeSelf) { shopPanel.SetActive(true); return; }
-
-            if (GetItemCount == 0)
-            {
-                Debug.Log("売るアイテムがないよ");
-                return;
-            }
-            Money += GetItemCount * 8;
-            GetItemCount = 0;
         });
 
         //  フィールドの生成
@@ -96,16 +89,7 @@ public class ObjectManager : MonoBehaviour
             {
                 var piceController = hitInfo.collider.gameObject.GetComponent<PiceController>();
 
-
-                //  TODO : Canvas状のUIの当たり判定の取り方を検討
-                //Debug.Log(hitInfo.transform.gameObject.layer);
-
-                ////  UIとの当たり判定を先に計算
-                ////  UIが存在していた場合、ブロックのクリックへ判定がいかないように
-                //if(hitInfo.collider.gameObject.layer ==5)
-                //{
-                //    return;
-                //}
+                
 
                 //  作物の回収を優先
                 if (piceController.FieldType == FieldAttribute.Type.Planted)
@@ -113,6 +97,9 @@ public class ObjectManager : MonoBehaviour
                     GetItemCount += piceController.Harvest();
                     return;
                 }
+
+                //  UIの当たりがあったら処理をしないように
+                if (IsExist()) { return; }
 
                 piceController.Selected(FieldType);
 
@@ -183,5 +170,22 @@ public class ObjectManager : MonoBehaviour
         }
 
         return touchPointToRay;
+    }
+
+    /// <summary>
+    /// UIがクリックされたか判定
+    /// </summary>
+    /// <returns></returns>
+    public bool IsExist()
+    {
+        var current = EventSystem.current;
+        var eventData = new PointerEventData(current)
+        {
+            position = Input.mousePosition
+        };
+        var raycastResults = new List<RaycastResult>();
+        current.RaycastAll(eventData, raycastResults);
+        var isExist = 0 < raycastResults.Count;
+        return isExist;
     }
 }

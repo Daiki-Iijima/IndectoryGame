@@ -361,7 +361,7 @@ GameObject:
   - component: {fileID: 9137098}
   - component: {fileID: 9137097}
   m_Layer: 5
-  m_Name: SellBtn
+  m_Name: ShopBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3367,6 +3367,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 834240252}
+  - component: {fileID: 834240253}
   m_Layer: 5
   m_Name: ShopPanel
   m_TagString: Untagged
@@ -3398,6 +3399,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000022888, y: 0.0000038147}
   m_SizeDelta: {x: 400, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &834240253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 834240251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5b16e712aca1a949b6ebeba03ac5a38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  closeBtn: {fileID: 1795931517}
+  sellBtn: {fileID: 1817396778}
+  manager: {fileID: 1429250730}
 --- !u!1 &868079965
 GameObject:
   m_ObjectHideFlags: 0
@@ -5656,7 +5672,7 @@ MonoBehaviour:
   picePrefab: {fileID: 1368006474}
   MoneyText: {fileID: 97936425}
   shopPanel: {fileID: 834240251}
-  sellButton: {fileID: 9137097}
+  shopButton: {fileID: 9137097}
   farmalandButton: {fileID: 1691763415}
   plowed_FarmalandButton: {fileID: 229147635}
   wastelandButton: {fileID: 531394019}
