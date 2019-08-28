@@ -19,22 +19,27 @@ public class ObjectManager : MonoBehaviour
 
     [SerializeField]
     private GameObject shopPanel;
+
+    #region  Attribute
+
+    public FieldAttribute.Type FieldType { get; private set; } = FieldAttribute.Type.Farmland;
+    public PlayerStateAttribute.PlayerStateType playerState { get; private set; } = PlayerStateAttribute.PlayerStateType.None;
+
+    #endregion
+
     #region ボタン
+    // ============= ブロック変更フラグの変更 ==============
+    [SerializeField] private Button shopButton;
+    [SerializeField] private Button farmalandButton;
+    [SerializeField] private Button plowed_FarmalandButton;
+    [SerializeField] private Button wastelandButton;
+    [SerializeField] private Button RoadButton;
 
-    [SerializeField]
-    private Button shopButton;
+    // ============= Playerの変更 ==============
+    [SerializeField] private Button PlantButton;
+    [SerializeField] private Button NoneButton;
 
-    private FieldAttribute.Type FieldType = FieldAttribute.Type.Farmland;
-
-    [SerializeField]
-    private Button farmalandButton;
-    [SerializeField]
-    private Button plowed_FarmalandButton;
-    [SerializeField]
-    private Button wastelandButton;
-    [SerializeField]
-    private Button RoadButton;
-
+    // ========================================
     #endregion
 
     public int CreateCountX;
@@ -44,6 +49,8 @@ public class ObjectManager : MonoBehaviour
     public int GetItemCount = 0;
 
     public int Money = 0;
+
+    public int HaveSeed = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -67,11 +74,15 @@ public class ObjectManager : MonoBehaviour
             }
         }
 
+        //  ブロックを更新する属性の変更
         farmalandButton.onClick.AddListener(() => FieldType = FieldAttribute.Type.Farmland);
         plowed_FarmalandButton.onClick.AddListener(() => FieldType = FieldAttribute.Type.Plowed_farmland);
         wastelandButton.onClick.AddListener(() => FieldType = FieldAttribute.Type.Wasteland);
         RoadButton.onClick.AddListener(() => FieldType = FieldAttribute.Type.Road);
 
+        //  プレイヤーの状態を変更
+        PlantButton.onClick.AddListener(() => playerState = PlayerStateAttribute.PlayerStateType.Plant);
+        NoneButton.onClick.AddListener(() => playerState = PlayerStateAttribute.PlayerStateType.None);
     }
 
     public Vector3 RandomVector3(float start, float end)
@@ -89,8 +100,6 @@ public class ObjectManager : MonoBehaviour
             {
                 var piceController = hitInfo.collider.gameObject.GetComponent<PiceController>();
 
-                
-
                 //  作物の回収を優先
                 if (piceController.FieldType == FieldAttribute.Type.Planted)
                 {
@@ -101,7 +110,27 @@ public class ObjectManager : MonoBehaviour
                 //  UIの当たりがあったら処理をしないように
                 if (IsExist()) { return; }
 
-                piceController.Selected(FieldType);
+
+
+                //  クリックしたブロックが耕されている
+                //  PlayerStateが植えるモード
+                //  タネを持っていた場合
+                if (piceController.FieldType == FieldAttribute.Type.Plowed_farmland &&
+                    playerState == PlayerStateAttribute.PlayerStateType.Plant &&
+                    HaveSeed > 0)
+                {
+                    Debug.Log("タネを植えます");
+                    HaveSeed--;
+                    piceController.PlantSeed();
+                    return;
+                }
+
+                //  植えるモードだった場合
+                if (playerState == PlayerStateAttribute.PlayerStateType.Plant) return;
+
+                //  変更しているブロックの状態が変更しようとしている状態と同じだった場合戻す
+                if (piceController.FieldType == FieldType) return;
+
 
                 switch (piceController.FieldType)
                 {
@@ -110,7 +139,6 @@ public class ObjectManager : MonoBehaviour
                         break;
                     case FieldAttribute.Type.Plowed_farmland:
                         Debug.Log("耕した土地");
-                        piceController.PlantSeed();
                         break;
                     case FieldAttribute.Type.Road:
                         Debug.Log("道");
@@ -119,6 +147,9 @@ public class ObjectManager : MonoBehaviour
                         Debug.Log("荒地");
                         break;
                 }
+
+                piceController.Selected(FieldType);
+
             }
 
             if (Input.GetMouseButton(1))

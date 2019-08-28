@@ -108,8 +108,11 @@ public class DebugManager : MonoBehaviour
 タネ : { SeedCount}
 小麦 : { WheatCount}
 ==============
+所持タネ : {manager.HaveSeed}
 所持小麦 : {manager.GetItemCount}
 所持金 : {manager.Money}
+==============
+プレイヤーの状態 : {manager.playerState}
 ";
     }
 }
