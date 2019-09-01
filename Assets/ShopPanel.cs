@@ -13,7 +13,6 @@ public class ShopPanel : MonoBehaviour
     private ObjectManager manager;
 
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +32,11 @@ public class ShopPanel : MonoBehaviour
             manager.Money += manager.GetItemCount * 8;
             manager.GetItemCount = 0;
         });
+
+    }
+
+    private void ShopScrollManager()
+    {
 
     }
 

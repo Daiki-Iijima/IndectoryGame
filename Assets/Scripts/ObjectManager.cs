@@ -6,6 +6,24 @@ using UnityEngine.UI;
 
 public class ObjectManager : MonoBehaviour
 {
+    //DataManagerの部分は、シングルトンにするクラス名を指定して下さい。
+    static public ObjectManager instance;
+    void Awake()
+    {
+        if (instance == null)
+        {
+
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+
+            Destroy(gameObject);
+        }
+
+    }
+
     [SerializeField]
     private GameObject placeField;
     [SerializeField]
